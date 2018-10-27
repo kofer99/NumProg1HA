@@ -31,11 +31,6 @@ public class Test_Gleitpunktzahl {
 		Gleitpunktzahl gleitref = new Gleitpunktzahl();
 		Gleitpunktzahl gleiterg;
 
-		Gleitpunktzahl ergK = new Gleitpunktzahl(0.5 + 0.5);
-		x = new Gleitpunktzahl(0.5);
-		y = new Gleitpunktzahl(0.5);
-		gleiterg = x.add(y);
-		System.out.println(ergK.toString()+ ":"+ gleiterg.toString() );
 		
 		/* Test von setDouble */
 		System.out.println("Test von setDouble");

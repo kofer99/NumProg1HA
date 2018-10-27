@@ -324,7 +324,7 @@ public class Gleitpunktzahl {
 		/*
 		 * TODO: hier ist die Operation denormalisiere zu implementieren.
 		 */
-		if(a.toDouble() > b.toDouble()){
+		if(Math.abs(a.toDouble() )> Math.abs(b.toDouble())){
 			while(a.exponent>b.exponent){
 				a.mantisse*=2;
 				a.exponent--;
@@ -362,19 +362,31 @@ public class Gleitpunktzahl {
 		return this;
 
 		Gleitpunktzahl res = new Gleitpunktzahl();
-		if(this.toDouble() > r.toDouble()){
-			denormalisiere(this, r);
-			res.exponent = r.exponent;
-			res.mantisse = (this.mantisse * (int)Math.pow(2, this.exponent-r.exponent))+ r.mantisse;
-			
-		}else if(this.toDouble() < r.toDouble()){
+	
+		if(Math.abs(this.toDouble()) > Math.abs(r.toDouble())){
+			res.vorzeichen = this.vorzeichen;
 			denormalisiere(this, r);
 			res.exponent = this.exponent;
-			res.mantisse = (r.mantisse * (int)Math.pow(2, r.exponent-this.exponent))+ this.mantisse;
-			
+			if(this.vorzeichen == r.vorzeichen){
+				res.mantisse = this.mantisse+r.mantisse;
+				
+			}else{
+				res.mantisse = this.mantisse-r.mantisse;
+			}
+		
+		}else if(this.toDouble() < r.toDouble()){
+			res.vorzeichen = r.vorzeichen;
+			denormalisiere(this, r);
+			res.exponent = this.exponent;
+			if(this.vorzeichen == r.vorzeichen){
+				res.mantisse = this.mantisse+r.mantisse;
+				
+			}else{
+				res.mantisse = r.mantisse-this.mantisse;
+			}
 		}else{
 			res.exponent = this.exponent;
-			res.mantisse = (r.mantisse * (int)Math.pow(2, r.exponent-this.exponent))+ this.mantisse;
+			res.mantisse = this.mantisse+r.mantisse;
 		}
 		res.normalisiere();
 		return  res;
@@ -392,8 +404,31 @@ public class Gleitpunktzahl {
 		 * Funktionen normalisiere und denormalisiere.
 		 * Achten Sie auf Sonderfaelle!
 		 */
-		 
-		return new Gleitpunktzahl();
+		//exceptions
+		Gleitpunktzahl res = new Gleitpunktzahl();
+
+		if(this.isNull()){
+			res = r;
+			res.vorzeichen = !res.vorzeichen;
+			return res;
+		}
+		if(r.isNull()){
+			return this;
+		}
+		if(this.isInfinite()){
+			return this;
+		}
+		if(r.isInfinite()){
+			res = r;
+			res.vorzeichen = !res.vorzeichen;
+			return res;
+		}
+		//default
+	
+			r.vorzeichen = !r.vorzeichen;
+			res = this.add(r);
+			r.vorzeichen = !r.vorzeichen;
+		 return res;
 	}
 	
 	/**
